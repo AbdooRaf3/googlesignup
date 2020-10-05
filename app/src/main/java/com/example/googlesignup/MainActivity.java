@@ -83,23 +83,12 @@ public class MainActivity extends AppCompatActivity {
     {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            Toast.makeText(MainActivity.this,"Signed In Successfully",Toast.LENGTH_SHORT).show();
             FirebaseGoogleAuth(account);
-        }
-        catch (ApiException e){
+        } catch (ApiException e) {
             Toast.makeText(MainActivity.this,"Sign In Failed",Toast.LENGTH_SHORT).show();
             FirebaseGoogleAuth(null);
-
-            new Handler().postDelayed(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    Intent mainIntent = new Intent(MainActivity.this, Home.class);
-                    startActivity(mainIntent);
-                }
-            }, 500);
         }
+
     }
 
     private void FirebaseGoogleAuth(GoogleSignInAccount account)
@@ -115,12 +104,12 @@ public class MainActivity extends AppCompatActivity {
                 {
                     if (task.isSuccessful())
                     {
-
+                        Toast.makeText(MainActivity.this, "Authentication Succesful", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(MainActivity.this, Home.class));
                         finish();
 
                     } else {
-                        Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
                         FirebaseUser user = firebaseAuth.getCurrentUser();
                         updateUI(user);
                     }
@@ -140,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             String personName = account.getDisplayName();
             String personEmail = account.getEmail();
 
-            Toast.makeText(MainActivity.this, personName + personEmail, Toast.LENGTH_SHORT).show();
+
         }
 
     }
