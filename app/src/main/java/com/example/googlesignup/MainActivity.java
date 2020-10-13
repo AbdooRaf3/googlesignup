@@ -96,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
         //check if account is null
         if (myAccount != null)
         {
-            AuthCredential myauthCredential = GoogleAuthProvider.getCredential(myAccount.getIdToken(), null);
-            firebaseAuth.signInWithCredential(myauthCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+            AuthCredential myAuthCredential = GoogleAuthProvider.getCredential(myAccount.getIdToken(), null);
+            firebaseAuth.signInWithCredential(myAuthCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
             {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task)
