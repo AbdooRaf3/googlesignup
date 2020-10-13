@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth firebaseAuth;
     private Button googleSignIn;
-    private int RC_SIGN_IN = 1;
+    private int RC_SIGN_UP = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,47 +42,47 @@ public class MainActivity extends AppCompatActivity {
         //Initializing Auth
         firebaseAuth = FirebaseAuth.getInstance();
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
         googleSignIn = (Button) findViewById(R.id.googleSignIn);
         googleSignIn.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v) {
-                signIn();
+                signUp();
             }
 
-            private void signIn()
+            private void signUp()
             {
                 Intent signIn = mGoogleSignInClient.getSignInIntent();
-                startActivityForResult(signIn,RC_SIGN_IN);
+                startActivityForResult(signIn,RC_SIGN_UP);
             }
         });
     }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    protected void onActivityResult(int getCode, int endCode, @Nullable Intent data)
     {
-        super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(getCode, endCode, data);
         //Google Sign Up
-        if(requestCode ==RC_SIGN_IN)
+        if(getCode ==RC_SIGN_UP)
         {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            handleSignUpResult(task);
 
         }
 
     }
 
 
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask)
+    private void handleSignUpResult(Task<GoogleSignInAccount> myCompletedTask)
     {
         try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            GoogleSignInAccount account = myCompletedTask.getResult(ApiException.class);
             FirebaseGoogleAuth(account);
         } catch (ApiException e) {
             Toast.makeText(MainActivity.this,"Sign In Failed",Toast.LENGTH_SHORT).show();
@@ -91,13 +91,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void FirebaseGoogleAuth(GoogleSignInAccount account)
+    private void FirebaseGoogleAuth(GoogleSignInAccount myAccount)
     {
         //check if account is null
-        if (account != null)
+        if (myAccount != null)
         {
-            AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-            firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+            AuthCredential myauthCredential = GoogleAuthProvider.getCredential(myAccount.getIdToken(), null);
+            firebaseAuth.signInWithCredential(myauthCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
             {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task)
@@ -110,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
 
                     } else {
                         Toast.makeText(MainActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        updateUI(user);
+                        FirebaseUser mUser = firebaseAuth.getCurrentUser();
+                        updateUI(mUser);
                     }
                 }
             });
@@ -121,13 +121,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateUI(FirebaseUser fUser)
+    private void updateUI(FirebaseUser firebaseUser)
     {
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
-        if (account != null)
+        GoogleSignInAccount mAccount = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
+        if (mAccount != null)
         {
-            String personName = account.getDisplayName();
-            String personEmail = account.getEmail();
+            String mPersonName = mAccount.getDisplayName();
+            String mPersonEmail = mAccount.getEmail();
 
 
         }
